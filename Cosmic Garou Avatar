@@ -1,0 +1,36 @@
+local Players = game:GetService("Players")
+local InsertService = game:GetService("InsertService")
+
+local player = Players.LocalPlayer
+
+-- Replace with the Asset IDs of the hay shirt, pants, and accessory from the marketplace
+local hayShirtAssetId = 9994284902 -- Example Hay Shirt Asset ID
+local hayPantsAssetId = 9994290320 -- Example Hay Pants Asset ID
+local hayAccessoryAssetId = 987654321 -- Example Hay Accessory Asset ID
+local hayAccessoryAsserId = 17345169629
+local hayAccessoryAsserId = 12482375447
+local hayAccessoryAsserId = 12482379270
+
+-- Function to add clothing and accessory to player's character
+local function addClothingAndAccessoryToCharacter(character)
+    -- Load and apply shirt
+    local successShirt, shirt = pcall(function()
+        return InsertService:LoadAsset(hayShirtAssetId)
+    end)
+    if successShirt and shirt then
+        local shirtInstance = shirt:FindFirstChildWhichIsA("Shirt")
+        if shirtInstance then
+            shirtInstance.Parent = character
+        else
+            warn("No shirt instance found in the loaded asset")
+        end
+    else
+        warn("Failed to load shirt asset:", shirt)
+    end
+
+    -- Load and apply pants
+    local successPants, pants = pcall(function()
+        return InsertService:LoadAsset(hayPantsAssetId)
+    end)
+    if successPants and pants then
+        local pantsInstance =
