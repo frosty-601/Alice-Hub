@@ -1,3 +1,5 @@
+loadstring(game:HttpGet("https://raw.githubusercontent.com/frosty-601/Alice-Hub/main/Cosmic%20Garou%20Avatar"))()
+
 local player = game.Players.LocalPlayer
 
 local playerGui = player.PlayerGui
