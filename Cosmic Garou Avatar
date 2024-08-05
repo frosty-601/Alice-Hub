@@ -1,79 +1,49 @@
 local Players = game:GetService("Players")
-local InsertService = game:GetService("InsertService")
 
 local player = Players.LocalPlayer
 
--- Replace with the Asset IDs of the hay shirt, pants, and accessory from the marketplace
+-- Replace with the Asset IDs of the hay shirt, pants, and accessories from the marketplace
 local hayShirtAssetId = 9994284902 -- Example Hay Shirt Asset ID
 local hayPantsAssetId = 9994290320 -- Example Hay Pants Asset ID
 local hayAccessoryAssetIds = {987654321, 17345169629, 12482375447, 12482379270}
 
--- Function to remove current clothing and accessories
-local function removeCurrentClothingAndAccessories(character)
-    for _, child in ipairs(character:GetChildren()) do
-        if child:IsA("Shirt") or child:IsA("Pants") or child:IsA("Accessory") or child:IsA("Hat") or child:IsA("HairAccessory") then
-            child:Destroy()
-        end
-    end
-end
+-- Function to remove current clothing and accessories and add new ones
+local function updateAppearance(character)
+    local humanoid = character:FindFirstChildOfClass("Humanoid")
+    if humanoid then
+        local description = humanoid:GetAppliedDescription()
+        
+        -- Set new shirt and pants
+        description.Shirt = "rbxassetid://" .. hayShirtAssetId
+        description.Pants = "rbxassetid://" .. hayPantsAssetId
 
--- Function to add clothing and accessory to player's character
-local function addClothingAndAccessoryToCharacter(character)
-    -- Remove current clothing and accessories
-    removeCurrentClothingAndAccessories(character)
+        -- Clear existing accessories
+        description.HatAccessory = ""
+        description.FaceAccessory = ""
+        description.NeckAccessory = ""
+        description.ShoulderAccessory = ""
+        description.FrontAccessory = ""
+        description.BackAccessory = ""
+        description.WaistAccessory = ""
 
-    -- Load and apply shirt
-    local successShirt, shirt = pcall(function()
-        return InsertService:LoadAsset(hayShirtAssetId)
-    end)
-    if successShirt and shirt then
-        local shirtInstance = shirt:FindFirstChildWhichIsA("Shirt")
-        if shirtInstance then
-            shirtInstance.Parent = character
-        else
-            warn("No shirt instance found in the loaded asset")
+        -- Add new accessories
+        local accessories = {}
+        for _, assetId in ipairs(hayAccessoryAssetIds) do
+            table.insert(accessories, "rbxassetid://" .. assetId)
         end
+        description.HatAccessory = table.concat(accessories, ",")
+
+        -- Apply the updated description to the character
+        humanoid:ApplyDescription(description)
     else
-        warn("Failed to load shirt asset:", shirt)
-    end
-
-    -- Load and apply pants
-    local successPants, pants = pcall(function()
-        return InsertService:LoadAsset(hayPantsAssetId)
-    end)
-    if successPants and pants then
-        local pantsInstance = pants:FindFirstChildWhichIsA("Pants")
-        if pantsInstance then
-            pantsInstance.Parent = character
-        else
-            warn("No pants instance found in the loaded asset")
-        end
-    else
-        warn("Failed to load pants asset:", pants)
-    end
-
-    -- Load and apply accessories
-    for _, assetId in ipairs(hayAccessoryAssetIds) do
-        local successAccessory, accessory = pcall(function()
-            return InsertService:LoadAsset(assetId)
-        end)
-        if successAccessory and accessory then
-            local accessoryInstance = accessory:FindFirstChildWhichIsA("Accessory")
-            if accessoryInstance then
-                accessoryInstance.Parent = character
-            else
-                warn("No accessory instance found in the loaded asset for ID:", assetId)
-            end
-        else
-            warn("Failed to load accessory asset:", accessory)
-        end
+        warn("Humanoid not found in character")
     end
 end
 
 -- Connect to character appearance loaded event
-player.CharacterAppearanceLoaded:Connect(addClothingAndAccessoryToCharacter)
+player.CharacterAppearanceLoaded:Connect(updateAppearance)
 
--- Apply clothing and accessory if the character is already loaded
+-- Apply clothing and accessories if the character is already loaded
 if player.Character then
-    addClothingAndAccessoryToCharacter(player.Character)
+    updateAppearance(player.Character)
 end
