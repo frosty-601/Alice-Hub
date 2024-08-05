@@ -185,31 +185,25 @@ player.CharacterAdded:Connect(function(newCharacter)
 end)
 
 -- Clothing and Accessories
-local function addAccessory(id, accessoryType)
-    local assetService = game:GetService("InsertService")
-    local accessory = assetService:LoadAsset(id):FindFirstChildOfClass(accessoryType)
+local function applyClothing(clothingType, templateId)
+    local clothing = Instance.new(clothingType)
+    clothing.Name = clothingType
+    clothing[clothingType == "Shirt" and "ShirtTemplate" or "PantsTemplate"] = "rbxassetid://" .. templateId
+    clothing.Parent = player.Character
+end
+
+local function applyAccessory(accessoryId)
+    local accessory = game:GetService("InsertService"):LoadAsset(accessoryId):FindFirstChildOfClass("Accessory")
     if accessory then
-        player.Character:AddAccessory(accessory)
+        accessory.Parent = player.Character
     end
 end
 
-local function updateClothing(id, clothingType)
-    local assetService = game:GetService("InsertService")
-    local clothing = assetService:LoadAsset(id):FindFirstChildOfClass(clothingType)
-    if clothing then
-        local existingClothing = player.Character:FindFirstChildOfClass(clothingType)
-        if existingClothing then
-            existingClothing:Destroy()
-        end
-        clothing.Parent = player.Character
-    end
-end
-
--- Add accessories and clothing here
-updateClothing(62724852, "Shirt") -- Replace with your Shirt ID
-updateClothing(62717733, "Pants") -- Replace with your Pants ID
-addAccessory(70513693, "Hat") -- Replace with your Hat ID
-addAccessory(16630147, "Accessory") -- Replace with your Accessory ID
+-- Add clothing and accessories here
+applyClothing("Shirt", 62724852) -- Replace with your Shirt ID
+applyClothing("Pants", 62717733) -- Replace with your Pants ID
+applyAccessory(70513693) -- Replace with your Hat ID
+applyAccessory(16630147) -- Replace with your Accessory ID
 
 local hayHatId = 15432080 -- Replace with your Hay Hat ID
-addAccessory(hayHatId, "Hat")
+applyAccessory(hayHatId)
