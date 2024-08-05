@@ -733,7 +733,7 @@ local startTime = 0
 
 Anim:Play()
 
-Anim:AdjustSpeed(0)
+Anim:AdjustSpeed(0.5)
 
 Anim.TimePosition = startTime
 
