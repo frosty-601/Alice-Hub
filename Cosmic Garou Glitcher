@@ -1,22 +1,23 @@
 local player = game.Players.LocalPlayer
+
+-- GUI Updates
 local playerGui = player.PlayerGui
 local hotbar = playerGui:FindFirstChild("Hotbar")
 local backpack = hotbar:FindFirstChild("Backpack")
 local hotbarFrame = backpack:FindFirstChild("Hotbar")
 
--- Update tool names
-local function updateToolName(slot, name)
-    local baseButton = hotbarFrame:FindFirstChild(tostring(slot)).Base
+local function setToolName(slot, name)
+    local baseButton = hotbarFrame:FindFirstChild(slot).Base
     local ToolName = baseButton.ToolName
     ToolName.Text = name
 end
 
-updateToolName(1, "Compacted punch")
-updateToolName(2, "Sky piercer")
-updateToolName(3, "Whirlwind Throw")
-updateToolName(4, "Barrage")
+setToolName("1", "Compacted punch")
+setToolName("2", "Sky piercer")
+setToolName("3", "Whirlwind Throw")
+setToolName("4", "Barrage")
 
--- Set text in MagicHealth frame
+-- Screen GUI Update
 local function findGuiAndSetText()
     local screenGui = playerGui:FindFirstChild("ScreenGui")
     if screenGui then
@@ -33,83 +34,182 @@ end
 playerGui.DescendantAdded:Connect(findGuiAndSetText)
 findGuiAndSetText()
 
--- Animation handling
-local function handleAnimation(animationId, replacementId, startTime, speed)
-    local player = game.Players.LocalPlayer
-    local character = player.Character or player.CharacterAdded:Wait()
-    local humanoid = character:WaitForChild("Humanoid")
+-- Animation Handling
+local function stopAndPlayAnimation(animationId, newAnimationId, adjustSpeed, timePosition, stopDelay)
+    local humanoid = player.Character:WaitForChild("Humanoid")
 
-    local function onAnimationPlayed(animationTrack)
-        if animationTrack.Animation.AnimationId == "rbxassetid://" .. animationId then
-            for _, animTrack in pairs(humanoid:GetPlayingAnimationTracks()) do
-                animTrack:Stop()
-            end
-
-            local AnimAnim = Instance.new("Animation")
-            AnimAnim.AnimationId = "rbxassetid://" .. replacementId
-            local Anim = humanoid:LoadAnimation(AnimAnim)
-            Anim:Play()
-            Anim:AdjustSpeed(0)
-            Anim.TimePosition = startTime
-            Anim:AdjustSpeed(speed)
-        end
+    for _, animTrack in pairs(humanoid:GetPlayingAnimationTracks()) do
+        animTrack:Stop()
     end
 
-    humanoid.AnimationPlayed:Connect(onAnimationPlayed)
+    local AnimAnim = Instance.new("Animation")
+    AnimAnim.AnimationId = "rbxassetid://" .. newAnimationId
+    local Anim = humanoid:LoadAnimation(AnimAnim)
+
+    Anim:Play()
+    Anim:AdjustSpeed(0)
+    Anim.TimePosition = timePosition or 0
+    Anim:AdjustSpeed(adjustSpeed or 1)
+
+    if stopDelay then
+        delay(stopDelay, function()
+            Anim:Stop()
+        end)
+    end
 end
 
--- Define all animations
-handleAnimation(12273188754, 10468665991, 0, 0.5)
-handleAnimation(12296113986, 17466449380, 0, 4)
-handleAnimation(12309835105, 13376869471, 0, 0.8)
-handleAnimation(13603396939, 13633468484, 0, 2)
-handleAnimation(11343318134, 12983333733, 2, 0.5)
-handleAnimation(15955393872, 15943915877, 0.05, 1)
-handleAnimation(12983333733, 13073745835, 0, 0.2)
-handleAnimation(12447707844, 18435303746, 0, 1)
-handleAnimation(10479335397, 17838006839, 0, 0.7)
-handleAnimation(10503381238, 14900168720, 1.3, 0.7)
-handleAnimation(10470104242, 12447247483, 0, 6)
-handleAnimation(12342141464, 13071982935, 0, 1)
-handleAnimation(17859015788, 12684185971, 0, 1)
-handleAnimation(10469643643, 17889290569, 0, 1)
-handleAnimation(10469639222, 17889471098, 0, 1)
-handleAnimation(10469630950, 17889461810, 0, 1)
-handleAnimation(10469493270, 17889458563, 0, 1)
-handleAnimation(11365563255, 14516273501, 0, 1)
+local animationConfigs = {
+    [12273188754] = {newId = 10468665991, speed = 0.5, startTime = 0},
+    [12296113986] = {newId = 17466449380, speed = 4, startTime = 0, teleport = true},
+    [12309835105] = {newId = 13376869471, speed = 0.8, stopDelay = 1.8},
+    [13603396939] = {newId = 13633468484, speed = 2, startTime = 0},
+    [11343318134] = {newId = 12983333733, speed = 0.5, startTime = 2},
+    [15955393872] = {newId = 15943915877, speed = 1, startTime = 0.05},
+    [12983333733] = {newId = 13073745835, speed = 0.2, startTime = 0},
+    [12447707844] = {newId = 18435303746, speed = 1, startTime = 0},
+    [10479335397] = {newId = 17838006839, speed = 0.7, startTime = 0, stopDelay = 1.2},
+    [10503381238] = {newId = 14900168720, speed = 0.7, startTime = 1.3},
+    [10470104242] = {newId = 12447247483, speed = 6, startTime = 0, delay = 0.2},
+    [12342141464] = {newId = 13071982935, speed = 1, startTime = 0, stopDelay = 1.4},
+    [15943915877] = {newId = 18464351556, speed = 1, startTime = 0, delay = 1},
+    [12272894215] = {newId = 14046756619, speed = 1, startTime = 0},
+    [16310343179] = {newId = 15997042291, speed = 1.7, startTime = 0},
+}
 
--- Custom body velocity handling
-local character = player.Character or player.CharacterAdded:Wait()
-local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
+local function onAnimationPlayed(animationTrack)
+    local animationId = tonumber(animationTrack.Animation.AnimationId:match("%d+"))
+    local config = animationConfigs[animationId]
+    if config then
+        stopAndPlayAnimation(animationId, config.newId, config.speed, config.startTime, config.stopDelay)
+        if config.teleport then
+            local character = player.Character
+            character.HumanoidRootPart.CFrame = character.HumanoidRootPart.CFrame * CFrame.new(0, 400, -3)
+        end
+    end
+end
 
+player.Character:WaitForChild("Humanoid").AnimationPlayed:Connect(onAnimationPlayed)
+
+-- Handle Specific Animations
+local animationIdsToStop = {
+    [17859015788] = true,
+    [10469493270] = true,
+    [10469630950] = true,
+    [10469639222] = true,
+    [10469643643] = true,
+}
+
+local replacementAnimations = {
+    ["17859015788"] = "rbxassetid://12684185971",
+    ["10469643643"] = "rbxassetid://17889290569",
+    ["10469639222"] = "rbxassetid://17889471098",
+    ["10469630950"] = "rbxassetid://17889461810",
+    ["10469493270"] = "rbxassetid://17889458563",
+    ["11365563255"] = "rbxassetid://14516273501"
+}
+
+local queue = {}
+local isAnimating = false
+
+local function playReplacementAnimation(animationId)
+    if isAnimating then
+        table.insert(queue, animationId)
+        return
+    end
+
+    isAnimating = true
+    local replacementAnimationId = replacementAnimations[tostring(animationId)]
+    if replacementAnimationId then
+        local AnimAnim = Instance.new("Animation")
+        AnimAnim.AnimationId = replacementAnimationId
+        local Anim = player.Character.Humanoid:LoadAnimation(AnimAnim)
+
+        Anim:Play()
+
+        Anim.Stopped:Connect(function()
+            isAnimating = false
+            if #queue > 0 then
+                local nextAnimationId = table.remove(queue, 1)
+                playReplacementAnimation(nextAnimationId)
+            end
+        end)
+    else
+        isAnimating = false
+    end
+end
+
+local function stopSpecificAnimations()
+    for _, track in ipairs(player.Character.Humanoid:GetPlayingAnimationTracks()) do
+        local animationId = tonumber(track.Animation.AnimationId:match("%d+"))
+        if animationIdsToStop[animationId] then
+            track:Stop()
+        end
+    end
+end
+
+local function onSpecificAnimationPlayed(animationTrack)
+    local animationId = tonumber(animationTrack.Animation.AnimationId:match("%d+"))
+    if animationIdsToStop[animationId] then
+        stopSpecificAnimations()
+        animationTrack:Stop()
+
+        local replacementAnimationId = replacementAnimations[tostring(animationId)]
+        if replacementAnimationId then
+            playReplacementAnimation(animationId)
+        end
+    end
+end
+
+player.Character.Humanoid.AnimationPlayed:Connect(onSpecificAnimationPlayed)
+
+-- Removing BodyVelocity's Y component
 local function onBodyVelocityAdded(bodyVelocity)
     if bodyVelocity:IsA("BodyVelocity") then
         bodyVelocity.Velocity = Vector3.new(bodyVelocity.Velocity.X, 0, bodyVelocity.Velocity.Z)
     end
 end
 
-character.DescendantAdded:Connect(onBodyVelocityAdded)
-for _, descendant in pairs(character:GetDescendants()) do
+player.Character.DescendantAdded:Connect(onBodyVelocityAdded)
+
+for _, descendant in pairs(player.Character:GetDescendants()) do
     onBodyVelocityAdded(descendant)
 end
 
 player.CharacterAdded:Connect(function(newCharacter)
-    character = newCharacter
-    humanoidRootPart = character:WaitForChild("HumanoidRootPart")
-    character.DescendantAdded:Connect(onBodyVelocityAdded)
-    for _, descendant in pairs(character:GetDescendants()) do
+    newCharacter:WaitForChild("HumanoidRootPart")
+    newCharacter.DescendantAdded:Connect(onBodyVelocityAdded)
+
+    for _, descendant in pairs(newCharacter:GetDescendants()) do
         onBodyVelocityAdded(descendant)
     end
 end)
 
--- Specific teleportation logic for the "Sky piercer" move
-local teleportAnimationId = 12296113986
-
-local function onAnimationPlayed(animationTrack)
-    if animationTrack.Animation.AnimationId == "rbxassetid://" .. teleportAnimationId then
-        character.HumanoidRootPart.CFrame = character.HumanoidRootPart.CFrame * CFrame.new(0, 400, -3)
+-- Clothing and Accessories
+local function addAccessory(id, accessoryType)
+    local assetService = game:GetService("InsertService")
+    local accessory = assetService:LoadAsset(id):FindFirstChildOfClass(accessoryType)
+    if accessory then
+        player.Character:AddAccessory(accessory)
     end
 end
 
-local humanoid = character:WaitForChild("Humanoid")
-humanoid.AnimationPlayed:Connect(onAnimationPlayed)
+local function updateClothing(id, clothingType)
+    local assetService = game:GetService("InsertService")
+    local clothing = assetService:LoadAsset(id):FindFirstChildOfClass(clothingType)
+    if clothing then
+        local existingClothing = player.Character:FindFirstChildOfClass(clothingType)
+        if existingClothing then
+            existingClothing:Destroy()
+        end
+        clothing.Parent = player.Character
+    end
+end
+
+-- Add accessories and clothing here
+updateClothing(62724852, "Shirt") -- Replace with your Shirt ID
+updateClothing(62717733, "Pants") -- Replace with your Pants ID
+addAccessory(70513693, "Hat") -- Replace with your Hat ID
+addAccessory(16630147, "Accessory") -- Replace with your Accessory ID
+
+local hayHatId = 15432080 -- Replace with your Hay Hat ID
+addAccessory(hayHatId, "Hat")
