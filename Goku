@@ -733,11 +733,11 @@ local startTime = 0
 
 Anim:Play()
 
-Anim:AdjustSpeed(0.5)
+Anim:AdjustSpeed(0)
 
 Anim.TimePosition = startTime
 
-Anim:AdjustSpeed(1)
+Anim:AdjustSpeed(0.5)
 
 delay(1.4, function()
 
