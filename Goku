@@ -737,9 +737,9 @@ Anim:AdjustSpeed(0)
 
 Anim.TimePosition = startTime
 
-Anim:AdjustSpeed(1)
+Anim:AdjustSpeed(0.5)
 
-delay(1.4, function()
+delay(4, function()
 
     Anim:Stop()
 
@@ -792,9 +792,9 @@ Anim:AdjustSpeed(0)
 
 Anim.TimePosition = startTime
 
-Anim:AdjustSpeed(1)
+Anim:AdjustSpeed(0.5)
 
-delay(1.4, function()
+delay(4, function()
 
     Anim:Stop()
 
