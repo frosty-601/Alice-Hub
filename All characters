@@ -9,4 +9,8 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/frosty-601/Alice-Hub/
 end)
 task.service()
 loadstring(game:HttpGet("https://raw.githubusercontent.com/frosty-601/Alice-Hub/main/M1%20Master"))()
+end)
+task.service()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/frosty-601/Alice-Hub/main/Saitama%20to%20gojo"))()
+end)
 task.service()
