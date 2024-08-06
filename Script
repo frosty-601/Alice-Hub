@@ -20,6 +20,8 @@ end)
 Section:NewButton("Garou to Goku", "", function()
     loadstring(game:HttpGet("https://raw.githubusercontent.com/frosty-601/Alice-Hub/main/Goku"))()
 end)
+Section:NewButton("All Characters", "", function()
+    
 local Tab = Window:NewTab("Characters(Client)")
 local Section = Tab:NewSection("Characters")
 Section:NewButton("KJ (You can use on tsb characters, you can hit the weakest dummy but not taking damage)", "KJ", function()
