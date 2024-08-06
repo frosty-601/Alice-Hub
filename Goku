@@ -741,7 +741,6 @@ Anim:AdjustSpeed(0.5)
 
 delay(4, function()
 
-    Anim:Stop()
 
 end)
 
@@ -796,7 +795,6 @@ Anim:AdjustSpeed(0.5)
 
 delay(4, function()
 
-    Anim:Stop()
 
 end)
 
