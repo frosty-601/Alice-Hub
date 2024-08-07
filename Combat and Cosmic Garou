@@ -1,6 +1,0 @@
-task.service()
-loadstring(game:HttpGet("https://raw.githubusercontent.com/frosty-601/Alice-Hub/main/Combat"))()
-end)
-task.service()
-loadstring(game:HttpGet("https://raw.githubusercontent.com/frosty-601/Alice-Hub/main/Cosmic%20Garou%20Glitcher"))()
-end)
