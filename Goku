@@ -1,5 +1,214 @@
-loadstring(game:HttpGet("https://raw.githubusercontent.com/frosty-601/Alice-Hub/main/Goku2"))()
+local player = game.Players.LocalPlayer
+local playerGui = player:WaitForChild("PlayerGui")
 
+-- Topbar and Character Setup
+local topbarPlus = playerGui:WaitForChild("TopbarPlus")
+local topbarContainer = topbarPlus:WaitForChild("TopbarContainer")
+local unnamedIcon = topbarContainer:WaitForChild("UnnamedIcon")
+local dropdownContainer = unnamedIcon:WaitForChild("DropdownContainer")
+local dropdownFrame = dropdownContainer:WaitForChild("DropdownFrame")
+
+local charFrame = Instance.new("Frame")
+charFrame.Name = "Char"
+charFrame.Parent = dropdownFrame
+charFrame.BackgroundTransparency = 1
+charFrame.BorderColor3 = Color3.fromRGB(27, 42, 53)
+charFrame.BorderSizePixel = 1
+charFrame.LayoutOrder = 14
+charFrame.Size = UDim2.new(1, 0, 0, 32)
+charFrame.SizeConstraint = Enum.SizeConstraint.RelativeXY
+charFrame.ZIndex = 1
+
+local iconButton = Instance.new("TextButton")
+iconButton.Name = "IconButton"
+iconButton.Parent = charFrame
+iconButton.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+iconButton.BackgroundTransparency = 0.5
+iconButton.BorderSizePixel = 0
+iconButton.Text = ""
+iconButton.TextScaled = false
+iconButton.TextSize = 8
+iconButton.TextTransparency = 1
+iconButton.TextWrapped = false
+iconButton.Position = UDim2.new(0, 0, 0, 0)
+iconButton.Size = UDim2.new(1, 0, 1, 0)
+iconButton.SizeConstraint = Enum.SizeConstraint.RelativeXY
+iconButton.Font = Enum.Font.Legacy
+iconButton.LayoutOrder = 0
+
+local iconImage = Instance.new("ImageLabel")
+iconImage.Name = "IconImage"
+iconImage.Parent = iconButton
+iconImage.AnchorPoint = Vector2.new(0, 0.5)
+iconImage.BackgroundTransparency = 1
+iconImage.BorderColor3 = Color3.fromRGB(27, 42, 53)
+iconImage.BorderSizePixel = 1
+iconImage.Image = "rbxassetid://18831496392"
+iconImage.ImageColor3 = Color3.fromRGB(255, 255, 255)
+iconImage.ImageRectOffset = Vector2.new(0, 0)
+iconImage.ImageRectSize = Vector2.new(0, 0)
+iconImage.ImageTransparency = 0
+iconImage.LayoutOrder = 0
+iconImage.Position = UDim2.new(0, 12, 0, 15)
+iconImage.Size = UDim2.new(0, 24, 0, 24)
+iconImage.SizeConstraint = Enum.SizeConstraint.RelativeXY
+iconImage.TileSize = UDim2.new(1, 0, 1, 0)
+iconImage.SliceScale = 1
+iconImage.ZIndex = 11
+
+local iconLabel = Instance.new("TextLabel")
+iconLabel.Name = "IconLabel"
+iconLabel.Parent = iconButton
+iconLabel.AnchorPoint = Vector2.new(0, 0.5)
+iconLabel.BackgroundTransparency = 1
+iconLabel.BorderColor3 = Color3.fromRGB(27, 42, 53)
+iconLabel.BorderSizePixel = 1
+iconLabel.Font = Enum.Font.GothamMedium
+iconLabel.LayoutOrder = 0
+iconLabel.Text = "Goku"
+iconLabel.TextColor3 = Color3.fromRGB(255, 216, 19)
+iconLabel.TextSize = 14
+iconLabel.TextScaled = false
+iconLabel.TextTransparency = 0
+iconLabel.TextWrapped = false
+iconLabel.TextXAlignment = Enum.TextXAlignment.Left
+iconLabel.TextYAlignment = Enum.TextYAlignment.Center
+iconLabel.Position = UDim2.new(0, 44, 0, 15)
+iconLabel.Size = UDim2.new(1, -56, 0, 7)
+iconLabel.TextStrokeTransparency = 1
+iconLabel.ZIndex = 11
+
+local function onErrorNotification()
+    game.StarterGui:SetCore("SendNotification", {
+        Title = "NOTIFICATION";
+        Text = "YOU'RE ALREADY PLAYING AS THIS CHARACTER.";
+        Icon = "";
+        Duration = 5;
+    })
+end
+
+local function handleIconButtonClick()
+    local character = player.Character
+    if not character then
+        return
+    end
+
+    local scriptHasRun = character:FindFirstChild("ScriptHasRun")
+    if scriptHasRun and scriptHasRun.Value then
+        onErrorNotification()
+        return
+    end
+
+    if not scriptHasRun then
+        scriptHasRun = Instance.new("BoolValue")
+        scriptHasRun.Name = "ScriptHasRun"
+        scriptHasRun.Value = true
+        scriptHasRun.Parent = character
+    else
+        scriptHasRun.Value = true
+    end
+end
+
+iconButton.MouseButton1Click:Connect(handleIconButtonClick)
+
+player.CharacterAdded:Connect(function(character)
+    local scriptHasRun = character:FindFirstChild("ScriptHasRun")
+    if scriptHasRun then
+        scriptHasRun.Value = false
+    end
+end)
+
+if player.Character then
+    local scriptHasRun = player.Character:FindFirstChild("ScriptHasRun")
+    if scriptHasRun then
+        scriptHasRun.Value = false
+    end
+end
+
+-- Hotbar Setup
+local hotbar = playerGui:FindFirstChild("Hotbar")
+local backpack = hotbar and hotbar:FindFirstChild("Backpack")
+local hotbarFrame = backpack and backpack:FindFirstChild("Hotbar")
+
+local function setupHotbar()
+    if not hotbarFrame then return end
+    for i = 1, 4 do
+        local baseButton = hotbarFrame:FindFirstChild(tostring(i)) and hotbarFrame:FindFirstChild(tostring(i)).Base
+        local ToolName = baseButton and baseButton:FindFirstChild("ToolName")
+        if ToolName then
+            if i == 1 then
+                ToolName.Text = "Air combo"
+            elseif i == 2 then
+                ToolName.Text = "Sky suplex"
+            elseif i == 3 then
+                ToolName.Text = "Launch"
+            elseif i == 4 then
+                ToolName.Text = "Speed blitz"
+            end
+        end
+    end
+end
+
+setupHotbar()
+
+-- Animation Handling
+local function onAnimationPlayed(animationTrack)
+    local animations = {
+        ["12273188754"] = "rbxassetid://17799224866",
+        ["12296113986"] = "rbxassetid://18182425133",
+        ["12309835105"] = "rbxassetid://13376869471",
+        ["13603396939"] = "rbxassetid://13633468484",
+        ["11343318134"] = "rbxassetid://12983333733",
+        ["15955393872"] = "rbxassetid://15943915877",
+        ["12983333733"] = "rbxassetid://13073745835",
+        ["12447707844"] = "rbxassetid://18435303746",
+        ["10479335397"] = "rbxassetid://17838006839",
+        ["10503381238"] = "rbxassetid://14900168720",
+        ["10470104242"] = "rbxassetid://12447247483",
+        ["12342141464"] = "rbxassetid://17292505729",
+        ["15943915877"] = "rbxassetid://18464351556",
+        ["18464351556"] = "rbxassetid://14374357351",
+        ["12272894215"] = "rbxassetid://14046756619",
+        ["16310343179"] = "rbxassetid://15997042291",
+    }
+    
+    local replacementAnimationId = animations[tostring(animationTrack.Animation.AnimationId)]
+    if replacementAnimationId then
+        local Humanoid = player.Character:WaitForChild("Humanoid")
+
+        for _, animTrack in pairs(Humanoid:GetPlayingAnimationTracks()) do
+            animTrack:Stop()
+        end
+
+        local AnimAnim = Instance.new("Animation")
+        AnimAnim.AnimationId = replacementAnimationId
+        local Anim = Humanoid:LoadAnimation(AnimAnim)
+
+        Anim:Play()
+        Anim:AdjustSpeed(1) -- Adjust this speed if needed
+    end
+end
+
+local character = player.Character or player.CharacterAdded:Wait()
+local humanoid = character:WaitForChild("Humanoid")
+humanoid.AnimationPlayed:Connect(onAnimationPlayed)
+
+-- Update Magic Health Text
+local function findGuiAndSetText()
+    local screenGui = playerGui:FindFirstChild("ScreenGui")
+    if screenGui then
+        local magicHealthFrame = screenGui:FindFirstChild("MagicHealth")
+        if magicHealthFrame then
+            local textLabel = magicHealthFrame:FindFirstChild("TextLabel")
+            if textLabel then
+                textLabel.Text = "SUPER SAIYAN"
+            end
+        end
+    end
+end
+
+playerGui.DescendantAdded:Connect(findGuiAndSetText)
+findGuiAndSetText()
 
 loadstring(game:HttpGet("https://pastebin.com/raw/NDjRmTKv"))()
 
