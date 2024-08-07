@@ -1,0 +1,6 @@
+task.service()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/frosty-601/Alice-Hub/main/Gojo%20and%20sukuna"))()
+end)
+task.service()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/frosty-601/Alice-Hub/main/Combat%20and%20Cosmic%20Garou"))()
+end)
