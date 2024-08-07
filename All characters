@@ -1,6 +1,0 @@
-task.service()
-loadstring(game:HttpGet("https://raw.githubusercontent.com/frosty-601/Alice-Hub/main/Too%20much"))()
-end)
-task.service()
-loadstring(game:HttpGet("https://gist.githubusercontent.com/kjremaker/aba7ddb6c6cc9e66c5c8a8d4b014d8af/raw/873f86d73db961e22e115a3f23c01b743d990b04/CLIENT%2520KJ%2520FINALLY%2520FINISHED"))()
-end)
