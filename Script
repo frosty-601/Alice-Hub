@@ -36,11 +36,5 @@ end)
 Section:NewButton("Dex Explorer V3", "", function()
     loadstring(game:HttpGet("https://raw.githubusercontent.com/Babyhamsta/RBLX_Scripts/main/Universal/BypassedDarkDexV3.lua", true))()
 end)
-Section:NewTextBox("Walkspeed", "", function(txt)
-	game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = s
-end)
-Section:NewTextBox("Jumpspeed", "", function(txt)
-	game.Players.LocalPlayer.Character.Humanoid.JumpSpeed = s
-end)
 local Tab = Window:NewTab("Credits")
 local Section = Tab:NewSection("Alice, Allah_isthebest, NetlessKJ")
