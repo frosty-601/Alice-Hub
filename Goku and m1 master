@@ -1,0 +1,6 @@
+task.service()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/frosty-601/Alice-Hub/main/Goku"))()
+end)
+task.service()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/frosty-601/Alice-Hub/main/M1%20Master"))()
+end)
