@@ -1317,9 +1317,6 @@ player.CharacterAdded:Connect(function(newCharacter)
 
 end)
 
-loadstring(game:HttpGet("https://pastebin.com/raw/5dUMQ0Su"))()
-
-
 loadstring(game:HttpGet("https://pastebin.com/raw/NDjRmTKv"))()
 
 -- Create the Tool
