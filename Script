@@ -30,5 +30,17 @@ Section:NewButton("KJ (You can use on tsb characters, try hit weakest dummy)", "
 end)
 local Tab = Window:NewTab("Misc")
 local Section = Tab:NewSection("Misc")
+Section:NewButton("Infinite Yield", "", function()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source"))()
+end)
+Section:NewButton("Dex Explorer V3", "", function()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/Babyhamsta/RBLX_Scripts/main/Universal/BypassedDarkDexV3.lua", true))()
+end)
+Section:NewSlider("WalkSpeed", "", 500, 0, function(s) -- 500 (MaxValue) | 0 (MinValue)
+    game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = s
+end)
+Section:NewSlider("JumpPower", "", 500, 0, function(s) -- 500 (MaxValue) | 0 (MinValue)
+    game.Players.LocalPlayer.Character.Humanoid.JumpPower = s
+end)
 local Tab = Window:NewTab("Credits")
 local Section = Tab:NewSection("Alice, Allah_isthebest, NetlessKJ")
